@@ -2,12 +2,10 @@ package br.com.predize.model;
 
 public class Produto {
 
-	private int id;
 	private String nome;
 	private Double preco;
 	private Integer Quantidade;
 	
-	static int idTemp;
 	//private String foto;
 	
 	public Produto(String nome, Double preco, Integer quantidade) {
@@ -15,35 +13,11 @@ public class Produto {
 			this.nome = nome;
 			this.preco = preco;
 			Quantidade = quantidade;
-			gerarID();
-			if(idTemp != id) {
-				id = idTemp;
-			}else {
-				gerarID();
-			}
 		}else {
 			System.out.println("Campos obrigatorios não estão preenchidos. \nPor favor verificar(Nome, Preço e/ou quantidade).");
 		}
 	}
 	
-
-//	public static Integer getId() {
-//		return id;
-//	}
-//
-//	public static void setId(Integer id) {
-//		Produto.id = id;
-//	}
-	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-
 	public String getNome() {
 		return nome;
 	}
@@ -74,9 +48,4 @@ public class Produto {
 		}
 		return false;
 	}
-	
-	public void gerarID() {
-		idTemp++;
-	}
-
 }

@@ -1,24 +1,28 @@
 package br.com.predize.aplicacao;
 
+import br.com.predize.controller.ProdutoController;
 import br.com.predize.model.Produto;
 
 public class Main {
 
 	public static void main(String[] args) {
 
-		Produto pt1 = new Produto("Cerveja", 48.94, 5);
-		Produto pt2 = new Produto("Cerveja", 48.94, 5);
-		Produto pt3 = new Produto("Cerveja", 48.94, 5);
-		Produto pt4 = new Produto("Cerveja", 48.94, 5);
+		ProdutoController prodController = new ProdutoController();
+		Produto prod = new Produto("Sabonte", 6.00, 2);
 		
+		//Salvar produto
+		//prodController.post(prod);
 		
-		System.out.println(pt1.getId());
-		System.out.println(pt2.getId());
-		System.out.println(pt3.getId());
-		System.out.println(pt4.getId());
+		//Editar produto
+		//prodController.put(5, prod);
 		
-		
-		
-	}
+		//Buscar produto
+		//prodController.get(4, prod);
 
+		//Buscar todos os produtos
+		//prodController.getAll();
+		
+		//Excluir produto
+		//prodController.delete(4, prod);
+	}
 }
