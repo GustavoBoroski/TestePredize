@@ -6,7 +6,7 @@ São eles:
 - [x] Frontend utilizando React;
 - [x] Docker;
 
-OBS. ***Foi utilizado o mysql workbench como banco de dados. O mesmo deu um problema ao realizar a exportação, por conta disso não se localiza nesse repositório. Caso seja necessário para a avaliação, por favor, podem me avisar que dou um jeito de corrigir.***
+OBS. ***Foi utilizado o mysql workbench como banco de dados. O mesmo deu um problema ao realizar a exportação, por conta disso não se localiza nesse repositório. Caso seja necessário para a avaliação, por favor, podem me avisar que dou um jeito de corrigir e coloca-lo aqui para que vocês possam verificar.***
 
 Att.
 
