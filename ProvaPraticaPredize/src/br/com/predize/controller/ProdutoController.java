@@ -87,7 +87,7 @@ public class ProdutoController {
 		}
 	}
 
-	public void delete(Integer id, Produto produto) {
+	public void delete(Integer id, String nome) {
 	
 		String sql = "DELETE from produtos where id = ? and nome = ?";		
 		
@@ -103,7 +103,7 @@ public class ProdutoController {
 			
 			//Adicionar os valores que são esperados pela query
 			pstm.setInt(1, id);
-			pstm.setString(2, produto.getNome());
+			pstm.setString(2, nome);
 			
 			//Executar a query
 			pstm.execute(); 

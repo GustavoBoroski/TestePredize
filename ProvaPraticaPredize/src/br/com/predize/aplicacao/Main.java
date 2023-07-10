@@ -11,29 +11,31 @@ public class Main {
 
 		ProdutoController prodController = new ProdutoController();
 		CarrinhoController cartController = new CarrinhoController();
-		Produto prod = new Produto("Tapioca", 6.00, 50);
+		Produto prod = new Produto("Café", 20.99, 2);
 		Carrinho carrinhoDeCompras = new Carrinho();
 		
 		//Salvar produto no banco
 		//prodController.post(prod);
 		
 		//Editar produto no banco
-		//prodController.put(5, prod);
+		//prodController.put(8, prod);
 		
 		//Buscar produto no banco
-		//prodController.get(4, prod);
+		//prodController.get(8, prod);
 
 		//Buscar todos os produtos no banco
 		//prodController.getAll();
 		
 		//Excluir produto no banco
-		//prodController.delete(4, prod);
+		//prodController.delete(1, "Feijão");
+		
+		//----------------------------------------------//
 		
 		//Adicionar produto ao carrinho
-		//cartController.adicionarCarrinho(5, "Sabonete", 20);
+		//cartController.adicionarCarrinho(8, "Café", 2);
 		
 		//Atualizar a quantidade do produto no carrinho
-		//cartController.editarCarrinho(5, 51);
+		//cartController.editarCarrinho(8, 1);
 		
 		//Remover um item do carrinho
 		//cartController.remove(5);
@@ -42,7 +44,7 @@ public class Main {
 		//cartController.BuscarTodos();
 		
 		//Finalizar a compra
-		cartController.finalizaCompra();
+		//cartController.finalizaCompra();
 		
 	}
 }
