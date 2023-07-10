@@ -11,7 +11,7 @@ public class Main {
 
 		ProdutoController prodController = new ProdutoController();
 		CarrinhoController cartController = new CarrinhoController();
-		Produto prod = new Produto("Sabonte", 6.00, 50);
+		Produto prod = new Produto("Tapioca", 6.00, 50);
 		Carrinho carrinhoDeCompras = new Carrinho();
 		
 		//Salvar produto no banco
@@ -30,7 +30,7 @@ public class Main {
 		//prodController.delete(4, prod);
 		
 		//Adicionar produto ao carrinho
-		//cartController.adicionarCarrinho(5, prod, 51);
+		//cartController.adicionarCarrinho(5, "Sabonete", 20);
 		
 		//Atualizar a quantidade do produto no carrinho
 		//cartController.editarCarrinho(5, 51);

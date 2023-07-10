@@ -2,14 +2,16 @@ package br.com.predize.controller;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Set;
+
+import javax.swing.JOptionPane;
 
 import com.mysql.jdbc.PreparedStatement;
 
-import br.com.predize.model.Produto;
-
 public class CarrinhoController {
 
-	public void adicionarCarrinho(Integer idProduto, Produto produto, Integer quantidade) {
+	public void adicionarCarrinho(Integer idProduto, String nome, Integer quantidade) {
 		String sql = "INSERT INTO carrinho(idProduto, quantidade, nome) VALUES(?, ?, ?)";
 		Connection conn = null;
 		PreparedStatement pstm = null;
@@ -17,25 +19,16 @@ public class CarrinhoController {
 
 		if(quantidade <= tempQuantidade) {
 			try {
-				//Criar uma conexão com o banco de dados
 				conn = Conexao.createConnectionToMySQL();
-				
-				//Criamos uma PreparedStatement para executar uma query
 				pstm = (PreparedStatement) conn.prepareStatement(sql);
-				
-				//Adicionar os valores que são esperados pela query
 				pstm.setInt(1, idProduto);
 				pstm.setInt(2, quantidade);
-				pstm.setString(3, produto.getNome());
-				
-				//Executar a query
+				pstm.setString(3, nome);
 				pstm.execute();
-				System.err.println("Produto adicionado ao carrinho com sucesso!");
-				
+				JOptionPane.showMessageDialog(null, "Produto adicionado ao carrinho com sucesso!", "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
-				//Fechar as conexões
 				try {
 					if(pstm != null) {
 						pstm.close();
@@ -48,7 +41,7 @@ public class CarrinhoController {
 				}
 			}
 		}else {
-			System.out.println("Quantidade indisponivel em estoque!");
+			JOptionPane.showMessageDialog(null, "Quantidade indisponivel em estoque!", "Aviso", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -64,24 +57,15 @@ public class CarrinhoController {
 		
 		if(quantidade <= tempQuantidade) {
 			try {
-				//Criar uma conexão com o banco de dados
 				conn = Conexao.createConnectionToMySQL();
-				
-				//Criamos uma PreparedStatement para executar uma query
 				pstm = (PreparedStatement) conn.prepareStatement(sql);
-				
-				//Adicionar os valores que são esperados pela query
 				pstm.setInt(1, quantidade);
 				pstm.setInt(2, idProduto);
-				
-				//Executar a query
 				pstm.execute();
-				System.err.println("Produto atualizado com sucesso!");
-				
+				JOptionPane.showMessageDialog(null, "Produto atualizado com sucesso!", "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
-				//Fechar as conexões
 				try {
 					if(pstm != null) {
 						pstm.close();
@@ -94,7 +78,7 @@ public class CarrinhoController {
 				}
 			}
 		}else {
-			System.out.println("Quantidade indisponivel em estoque!");
+			JOptionPane.showMessageDialog(null, "Quantidade indisponivel em estoque!", "Aviso", JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
@@ -105,22 +89,14 @@ public class CarrinhoController {
 		PreparedStatement pstm = null;
 		
 		try {
-			//Criar uma conexão com o banco de dados
 			conn = Conexao.createConnectionToMySQL();
-			
-			//Criamos uma PreparedStatement para executar uma query
 			pstm = (PreparedStatement) conn.prepareStatement(sql);
-			
-			//Adicionar os valores que são esperados pela query
 			pstm.setInt(1, idProduto);
-			
-			//Executar a query
 			pstm.execute(); 
-			System.err.println("Produto removido do carrinho com suscesso!");	
+			JOptionPane.showMessageDialog(null, "Produto removido do carrinho com suscesso!", "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			//Fechar as conexões
 			try {
 				if(pstm != null) {
 					pstm.close();
@@ -140,16 +116,11 @@ public class CarrinhoController {
 		PreparedStatement pstm = null;
 		
 		try {
-			//Criar uma conexão com o banco de dados
 			conn = Conexao.createConnectionToMySQL();
-			
-			//Criamos uma PreparedStatement para executar uma query
 			pstm = (PreparedStatement) conn.prepareStatement(sql);
-			
-			//Executar a query
 			ResultSet rs = pstm.executeQuery(); 
 			if(!rs.next()) {
-				System.err.println("Não possui produtos adicionados!");
+				JOptionPane.showMessageDialog(null, "Não possui produtos adicionados!", "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
 			}
 			rs.beforeFirst();
 			
@@ -159,7 +130,6 @@ public class CarrinhoController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			//Fechar as conexões
 			try {
 				if(pstm != null) {
 					pstm.close();
@@ -174,22 +144,139 @@ public class CarrinhoController {
 	}
 	
 	public void finalizaCompra() {
+		//Dar baixa no sistema
+		realizarBaixaQuantidade();
+		//Limpar carrinho
+		limparCarrinho();
+	}
+
+	private void realizarBaixaQuantidade() {
+		HashMap<Integer, Integer> listaCarrinho = new HashMap<>();
+		HashMap<Integer, Integer> listaProduto = new HashMap<>();
 		
+		String sqlCarrinho = "SELECT idProduto, quantidade FROM carrinho"; 
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		try {
+			conn = Conexao.createConnectionToMySQL();
+			pstm = (PreparedStatement) conn.prepareStatement(sqlCarrinho);
+			ResultSet rs = pstm.executeQuery(); 
+			while(rs.next()) {
+				listaCarrinho.put(rs.getInt(1), rs.getInt(2));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstm != null) {
+					pstm.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		String sqlProduto = "SELECT id, quantidade FROM produtos"; 
+		Connection conn2 = null;
+		PreparedStatement pstm2 = null;
+		try {
+			conn2 = Conexao.createConnectionToMySQL();
+			pstm2 = (PreparedStatement) conn2.prepareStatement(sqlProduto);
+			ResultSet rs = pstm2.executeQuery(); 
+			while(rs.next()) {
+				listaProduto.put(rs.getInt(1), rs.getInt(2));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstm2 != null) {
+					pstm2.close();
+				}
+				if(conn2 != null) {
+					conn2.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		
+		Set<Integer> cart = listaCarrinho.keySet();
+		Set<Integer> produtoList = listaProduto.keySet();
+		Integer novaQuantidadeEstoque;
+		for(Integer prodId : cart) {
+			if(prodId != null) {
+				for(Integer produto : produtoList) {
+					if(prodId == produto) {
+						realizaBaixa(listaCarrinho, listaProduto, prodId, produto);
+					}
+				}
+			}
+		}
+	}
+
+	private void realizaBaixa(HashMap<Integer, Integer> listaCarrinho, HashMap<Integer, Integer> listaProduto,
+			Integer prodId, Integer produto) {
+		Integer novaQuantidadeEstoque;
+		novaQuantidadeEstoque = listaProduto.get(produto) - listaCarrinho.get(prodId);
+		
+		String sqlModificacaoQuantidade = "UPDATE produtos SET quantidade = ? where id = ?"; 
+		Connection conn3 = null;
+		PreparedStatement pstm3 = null;
+		try {
+			conn3 = Conexao.createConnectionToMySQL();
+			pstm3 = (PreparedStatement) conn3.prepareStatement(sqlModificacaoQuantidade);
+			pstm3.setInt(1, novaQuantidadeEstoque);
+			pstm3.setInt(2, prodId);
+			pstm3.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstm3 != null) {
+					pstm3.close();
+				}
+				if(conn3 != null) {
+					conn3.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+
+	private void limparCarrinho() {
 		String sqlLimpaCarrinho = "DELETE FROM carrinho"; 
-		
-		
-		
-		
-		
-		
-		
+		Connection conn = null;
+		PreparedStatement pstm = null;
+		try {
+			conn = Conexao.createConnectionToMySQL();
+			pstm = (PreparedStatement) conn.prepareStatement(sqlLimpaCarrinho);
+			pstm.execute(); 
+			JOptionPane.showMessageDialog(null, "Compra finalizada!", "Aviso", JOptionPane.YES_NO_CANCEL_OPTION);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(pstm != null) {
+					pstm.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
 	}
 	
 	private int buscarQuantidadeProduto(Integer idProduto) {
 		Connection conn2 = null;
 		PreparedStatement pstm2 = null;
 		int tempQuantidade = 0;
-		
 		try {
 			conn2 = Conexao.createConnectionToMySQL();
 			pstm2 = (PreparedStatement) conn2.prepareStatement("SELECT quantidade FROM produtos where id = ?");
